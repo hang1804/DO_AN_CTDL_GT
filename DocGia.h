@@ -880,16 +880,12 @@ void Docgia(PTRCNP t){
 					{	
 						XoaHetDG();
 						v=luu_dia_chi_vao_mang(t,sl_dg,sort);
-						xuat_DG(v,x,y,sl_dg,dem);
 						dem=0;
 						xuat_DG(v,x,y,sl_dg,dem);
 						xuat_DG1(v[dem]->dg,x,y,dem,2);
 						break;
 					} 	
 				}
-				XoaHetDG();
-				dem=0;
-				xuat_DG(v,x,y,sl_dg,dem);
 				save_DocGia(t);
 				save_MuonTra(t);			
 			}
@@ -957,8 +953,7 @@ void Docgia(PTRCNP t){
 					v=luu_dia_chi_vao_mang(t,sl_dg,sort);
 					dem=0;
 					xuat_DG(v,x,y,sl_dg,dem);
-					dem=0;
-					xuat_DG(v,x,y,sl_dg,dem);
+					xuat_DG1(v[dem]->dg,x,y,dem,2);
 					if(sort%2==0)
 					{
 						VePhimChucNang_DG("F3 SORT TEN");
