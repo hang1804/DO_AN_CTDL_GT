@@ -1386,13 +1386,19 @@ void LK_SDM(List DSach, PTRCNP DGia)
 	SetBGColor(0);
 	ShowCur(0);
 	if (DGia == NULL) return;
-	Bang_SDM();
 	int so_DG = 0;
 	PTRCNP *dsdm = new PTRCNP[so_DG];
 	DG_DMS(dsdm, DGia, so_DG);
+	if (so_DG == 0) {
+		SetColor(10);
+		gotoxy(70, 14); cout <<"KHONG CO DOC GIA NAO DANG MUON SACH!";
+		Sleep(2000);
+		XoaBangDanhSach();
+		return;
+	}
+
+	Bang_SDM();
 	Quick_Sort(dsdm, 0, so_DG-1);
-	
-	if (so_DG == 0) return;
 	int so_trang = 0;
 	if (so_DG%30 != 0) so_trang = so_DG/30+1;
 	else so_trang = so_DG/30;
@@ -1773,7 +1779,14 @@ void DocGia_QuaHan(List DSach, PTRCNP DGia)
 	int so_DG = 0;
 	PTRCNP *dsqh = new PTRCNP[so_DG];
 	Cac_DG_QH(dsqh, DGia, so_DG);
-	if (so_DG == 0) return;
+	if (so_DG == 0) {
+		SetColor(10);
+		gotoxy(70, 14); cout <<"KHONG CO DOC GIA NAO MUON SACH QUA HAN!";
+		Sleep(2000);
+		XoaBangDanhSach();
+		return;
+	}
+	
 	Quick_Sort(dsqh, 0, so_DG-1);
 	Bang_QH();
 	int so_trang = 0;
