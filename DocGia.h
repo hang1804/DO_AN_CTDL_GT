@@ -5,10 +5,10 @@
 #include <windows.h>
 #include <conio.h>
 #include "mylib.h"
-#include "Define.h" 
-#include "KhaiBao.h"
+#include "Define1.h" 
+#include "Khai_Bao.h"
 #include "LenhNhap.h"
-#include "SaveLoadFile.h"
+#include "save_load_file.h"
 #include <iomanip>
 using namespace std;
 int dem,sl_dg;
@@ -121,28 +121,142 @@ string ChuanHoaChuoi(string x){
 	return tmp;
 	}
 
+
+string NhapKiTuKhongSo1(int ChieuDaiChuoi, int DiemX, int DiemY, int MauChu, int ChieuDaiKhungThongBao){
+	ShowCur(1);
+	DieuKienKiTu=0;
+	int x;
+	int y;
+	string a;
+	x=wherex();
+	y=wherey();
+	SetColor(MauChu);
+	while(1)
+	{
+		char b;
+		b=getch();
+		if(b==Esc && a.length()==0)
+		{
+			DieuKienKiTu=1;
+			return "a";
+		}
+		if(a.length()<ChieuDaiChuoi)
+		{
+			if(b==Esc)
+			{
+				DieuKienKiTu=1;
+				ShowCur(0);
+				return a;
+			} 
+			else if(b==BackSpace && a.length()>0)
+			{
+				gotoxy(wherex()-1, wherey());
+				cout<<" "; 
+				cout<<"\b";
+				a.pop_back();
+			} 
+			else if(b==13)
+			{
+				if(a.length()==0)
+				{
+					ShowCur(0);
+					VeNoiDungThongBao(LoiTrong,DiemX,DiemY,12);
+					Sleep(3000);
+					XoaNoiDungThongBao(DiemX,DiemY,ChieuDaiKhungThongBao);
+					ShowCur(1);
+					gotoxy(x,y);
+					SetColor(MauChu);
+				}
+				else
+				{
+					DieuKienKiTu=0;
+					if(a.rfind(" ")==a.length()-1)
+					{
+						a.pop_back();
+					}
+					ShowCur(0);
+					return a; 
+				}
+			} 
+			else if(b==-32)
+			{
+				b=getch(); 
+				if(b==Up || b==Down || b==Left || b==Right);
+			}
+			else if((b>=65 && b<=90) || (b>=97 && b<=122))
+			{
+				if(a.rfind(" ")==a.length()-1 && b!=Space)
+				{
+					char k;
+					k=toupper(b);
+					cout<<k;
+					a+=k;
+				}
+				else if(a.rfind(" ")!=a.length()-1 && b!=Space)
+				{
+					char k;
+					k=tolower(b);
+					cout<<k;
+					a+=k;
+				} 
+				else if(a.length()==0 && b==Space); 
+				else if(a.rfind(" ")==a.length()-1 && b==Space);
+				else
+				{	
+					cout<<b;
+					a+=b; 
+				}
+			}
+		}
+		else if(a.length()>=ChieuDaiChuoi)
+		{
+			if(b==Esc)
+			{
+				DieuKienKiTu=1;
+				ShowCur(0);
+				return a; 
+			} 
+			else if(a.length()==ChieuDaiChuoi && b==13)
+			{
+				DieuKienKiTu=0;
+				if(a.rfind(" ")==a.length()-1)
+				{
+					a.pop_back();
+				}
+				ShowCur(0);
+				return a; 
+			}
+			else if(b==BackSpace && a.length()>0)
+			{
+				gotoxy(wherex()-1, wherey());
+				cout<<" "; 
+				cout<<"\b";
+				a.pop_back();
+			}
+		}
+	}
+
+}
+
 string CapNhatKiTuKhongSo1(string Goc, int ChieuDaiChuoi, int DiemX, int DiemY, int MauChu, int ChieuDaiKhungThongBao){
 	ShowCur(1);
 	DieuKienKiTu=0;
 	string m=Goc;
 	string a;
 	char b;
-	int x=wherex();
-	int y=wherey();
+	int x;
+	int y;
 	SetColor(MauChu);
 	while(1)
 	{
-		if(a.length()>0 && a[a.length()-1]!=' ' || a.length()==0)
-		{
-			b=getch();
-	
+		b=getch();
 		if(a.length()+Goc.length()<ChieuDaiChuoi)
 		{
 			if(b==Esc)
 			{
 				DieuKienKiTu=1;
 				ShowCur(0);
-				break;
+				return m;
 			} 
 			else if(b==BackSpace && a.length()==0 && Goc.length()>0)
 			{
@@ -158,13 +272,12 @@ string CapNhatKiTuKhongSo1(string Goc, int ChieuDaiChuoi, int DiemX, int DiemY, 
 				cout<<"\b";
 				a.pop_back();
 			}
-			else if(b==Space && a.length()==0)
-			{
-			}
 			else if(b==13)
 			{
 				if(a.length()==0 && Goc.length()==0)
 				{
+					x=wherex();
+					y=wherey();
 					ShowCur(0);
 					VeNoiDungThongBao(LoiTrong,DiemX,DiemY,12);
 					Sleep(3000);
@@ -172,7 +285,8 @@ string CapNhatKiTuKhongSo1(string Goc, int ChieuDaiChuoi, int DiemX, int DiemY, 
 					ShowCur(1);
 					gotoxy(x,y);
 					SetColor(MauChu);
-				}else if((a.length()==0 && Goc.length()>0) || (a.length()>0 && Goc.length()>0) || (a.length()>0 && Goc.length()==0))
+				}
+				else if((a.length()==0 && Goc.length()>0) || (a.length()>0 && Goc.length()>0) || (a.length()>0 && Goc.length()==0))
 				{
 					DieuKienKiTu=0;
 					Goc+=a;
@@ -189,45 +303,21 @@ string CapNhatKiTuKhongSo1(string Goc, int ChieuDaiChuoi, int DiemX, int DiemY, 
 				b=getch(); 
 				if(b==Up || b==Down || b==Left || b==Right);
 			}
-			else if(a.length()==0 && b==32)
+			else if((b>=65 && b<=90) || (b>=97 && b<=122) )
 			{
-				gotoxy(wherex()+1,wherey());
-				a+=b;
-			} 
-			else if((b>=65 && b<=90) || (b>=97 && b<=122) || b==32 || (b>=44 && b<=46) || b==38)
-			{
-				if(a.length()==0 && Goc.rfind(" ")==Goc.length()-1 && b!=32)
+				if(a.length()==0 && Goc.length()==0)
 				{
 					char k;
 					k=toupper(b);
-					cout<<k;
-					a+=k;
-				}
-				else if(a.length()>0 && a.rfind(" ")==a.length()-1 && b!=32)
-				{
-					char k;
-					k=toupper(b);
-					cout<<k;
-					a+=k;
-				}
-				else if(a.length()==0 && Goc.rfind(" ")!=Goc.length()-1 && b!=Space)
-				{
-					char k;
-					k=tolower(b);
-					cout<<k;
-					a+=k;
-				}
-				else if(a.length()>0 && a.rfind(" ")!=a.length()-1 && b!=Space)
-				{
-					char k;
-					k=tolower(b);
 					cout<<k;
 					a+=k;
 				}
 				else
-				{	
-					cout<<b;
-					a+=b; 
+				{
+					char k;
+					k=tolower(b);
+					cout<<k;
+					a+=k;
 				}
 			}
 		}
@@ -237,7 +327,7 @@ string CapNhatKiTuKhongSo1(string Goc, int ChieuDaiChuoi, int DiemX, int DiemY, 
 			{
 				DieuKienKiTu=1;
 				ShowCur(0);
-				break;
+				return m;
 			} 
 			else if((a.length()+Goc.length())==ChieuDaiChuoi && b==13)
 			{
@@ -265,14 +355,6 @@ string CapNhatKiTuKhongSo1(string Goc, int ChieuDaiChuoi, int DiemX, int DiemY, 
 				a.pop_back();
 			}
 		}
-	}
-	else
-	{
-		gotoxy(wherex()-1, wherey());
-		cout<<" "; 
-		cout<<"\b";
-		a.pop_back();
-	}
 	}
 }
 
@@ -316,13 +398,6 @@ int NhapSo1(int ChieuDaiChuoi, int DiemX, int DiemY, int MauChu, int ChieuDaiKhu
 					ShowCur(1);
 					gotoxy(x,y);
 				} 
-				else
-				{
-					DieuKienKiTu=0;
-					a=stoi(s);
-					ShowCur(0);
-					return a;
-				}
 			}
 			else if(b>=48 && b<=49)
 			{
@@ -344,7 +419,8 @@ int NhapSo1(int ChieuDaiChuoi, int DiemX, int DiemY, int MauChu, int ChieuDaiKhu
 				a=stoi(s);
 				ShowCur(0);
 				return a; 
-			}else if(b==BackSpace && s.length()>0)
+			}
+			else if(b==BackSpace && s.length()>0)
 			{
 				gotoxy(wherex()-1, wherey());
 				cout<<" "; 
@@ -354,6 +430,207 @@ int NhapSo1(int ChieuDaiChuoi, int DiemX, int DiemY, int MauChu, int ChieuDaiKhu
 		}
 	} 
 }
+
+int NhapSo2(int ChieuDaiChuoi, int DiemX, int DiemY, int MauChu, int ChieuDaiKhungThongBao){
+	ShowCur(1);
+	DieuKienKiTu=0;
+	int a;
+	int x;
+	int y;
+	string s;
+	x=wherex();
+	y=wherey();
+	SetColor(MauChu);
+	while(1)
+	{
+		char b;
+		b=getch();
+		if(b==Esc && s.length()==0)
+			{
+				DieuKienKiTu=1;
+				return 	DieuKienKiTu;
+			} 
+		if(s.length()<ChieuDaiChuoi)
+		{
+			if(b==Esc)
+			{
+				DieuKienKiTu=1;
+				a=stoi(s);
+				ShowCur(0);
+				return a;
+			} 
+			else if(b==BackSpace && s.length()>0)
+			{
+				gotoxy(wherex()-1, wherey());
+				cout<<" "; 
+				cout<<"\b";
+				s.pop_back();
+			}
+			else if(b==13)
+			{
+				if(s.length()==0)
+				{
+					ShowCur(0);
+					VeNoiDungThongBao(LoiTrong,DiemX,DiemY,12);
+					Sleep(3000);
+					XoaNoiDungThongBao(DiemX,DiemY,ChieuDaiKhungThongBao);
+					ShowCur(1);
+					gotoxy(x,y);
+					SetColor(MauChu);
+				} 
+				else
+				{
+					x=wherex();
+					y=wherey();
+					VeNoiDungThongBao("MA KHONG HOP LE",24,11,2);
+					Sleep(1000);
+					XoaNoiDungThongBao(24,11,60);
+					gotoxy(x,y);
+					SetColor(4);
+				}
+			}
+			else if(b==-32)
+			{
+				b=getch(); 
+				if(b==Up || b==Down || b==Left || b==Right);
+			}
+			else if(b>=48 && b<=57)
+			{
+				s+=b;
+				cout<<b;
+			}
+		}
+		else if(s.length()>=ChieuDaiChuoi)
+		{
+			if(b==Esc)
+			{
+				DieuKienKiTu=1;
+				a=stoi(s);
+				ShowCur(0);
+				return a; 
+			} 
+			else if(s.length()==ChieuDaiChuoi && b==13)
+			{
+				DieuKienKiTu=0;
+				a=stoi(s);
+				ShowCur(0);
+				return a; 
+			}
+			else if(b==BackSpace && s.length()>0)
+			{
+				gotoxy(wherex()-1, wherey());
+				cout<<" "; 
+				cout<<"\b";
+				s.pop_back();
+			}
+		}
+	} 
+}
+
+int CapNhatSo1(int SoGoc, int ChieuDaiChuoi, int DiemX, int DiemY, int MauChu, int ChieuDaiKhungThongBao){
+	ShowCur(1);
+	DieuKienKiTu=0;
+	int m=SoGoc;
+	int a;
+	string Goc=to_string(SoGoc);
+	string s;
+	int x=wherex();
+	int y=wherey();
+	SetColor(MauChu);
+	while(1)
+	{
+		char b;
+		b=getch();
+		if(s.length()+Goc.length()<ChieuDaiChuoi)
+		{
+			if(b==Esc)
+			{
+				DieuKienKiTu=1;
+				ShowCur(0);
+				return m;
+			} 
+			else if(b==BackSpace && s.length()==0 && Goc.length()>0)
+			{
+				gotoxy(wherex()-1, wherey());
+				cout<<" "; 
+				cout<<"\b";
+				Goc.pop_back();
+			}	
+			else if(b==BackSpace && s.length()>0)
+			{
+				gotoxy(wherex()-1, wherey());
+				cout<<" "; 
+				cout<<"\b";
+				s.pop_back();
+			}
+			else if(b==13)
+			{
+				if(s.length()==0 && Goc.length()==0)
+				{
+					ShowCur(0);
+					VeNoiDungThongBao(LoiTrong,DiemX,DiemY,12);
+					Sleep(3000);
+					XoaNoiDungThongBao(DiemX,DiemY,ChieuDaiKhungThongBao);
+					ShowCur(1);
+					gotoxy(x,y);
+					SetColor(MauChu);
+				}
+				else if((s.length()==0 && Goc.length()>0) || (s.length()>0 && Goc.length()>0) || (s.length()>0 && Goc.length()==0))
+				{
+					x=wherex();
+					y=wherey();
+					VeNoiDungThongBao("MA THE KHONG HOP LE",24,11,2);
+					Sleep(1000);
+					XoaNoiDungThongBao(24,11,60);
+					gotoxy(x,y);
+					SetColor(4);
+				}
+			}
+			else if(b==-32)
+			{
+				b=getch(); 
+				if(b==Up || b==Down || b==Left || b==Right);
+			}
+			else if(b>=48 && b<=57)
+			{
+				s+=b;
+				cout<<b;
+			}
+		}
+		else if(s.length()+Goc.length()>=ChieuDaiChuoi)
+		{
+			if(b==Esc)
+			{
+				DieuKienKiTu=1;
+				ShowCur(0);
+				return m;
+			} 
+			else if((s.length()+Goc.length())==ChieuDaiChuoi && b==13)
+			{
+				DieuKienKiTu=0;
+				Goc+=s;
+				a=stoi(Goc);
+				ShowCur(0);
+				return a; 
+			}
+			else if(b==BackSpace && s.length()==0 && Goc.length()>0)
+			{
+				gotoxy(wherex()-1, wherey());
+				cout<<" "; 
+				cout<<"\b";
+				Goc.pop_back();
+			}	
+			else if(b==BackSpace && s.length()>0)
+			{
+				gotoxy(wherex()-1, wherey());
+				cout<<" "; 
+				cout<<"\b";
+				s.pop_back();
+			}
+		}
+	} 
+}
+
 PTRCNP* them_phan_tu_vao_mang(PTRCNP* z,int i){ 
   z=new PTRCNP[i];
   return z;
@@ -386,14 +663,23 @@ void duyetDG(PTRCNP t,PTRCNP* &z,int &j){
 }
 
 PTRCNP* luu_dia_chi_vao_mang(PTRCNP t,int &sl_dg,int k){
+	PTRCNP* w;
 	sl_dg=0;
 	PTRCNP *z=new PTRCNP[sl_dg];
 	duyetDG(t,z,sl_dg);
-	if(k%2!=0) quick_sort(z,0,sl_dg-1);
+	if(k%2!=0  ) quick_sort(z,0,sl_dg-1);
 	return z;
 }	
+//PTRCNP* luu_dia_chi_vao_mang_giam(PTRCNP t,int &sl_dg,int k){
+//	PTRCNP* w;
+//	sl_dg=0;
+//	PTRCNP *z=new PTRCNP[sl_dg];
+//	duyetDG(t,z,sl_dg);
+//	if(k%2!=0  ) quick_sort(z,0,sl_dg-1);
+//	return z;
+//}
 void XoaThongTinDocGia(){
-	XoaThongTin(chieudaiDG,1,XDocGia,wherey());
+	XoaThongTin(chieudaiDG,5,XDocGia,wherey());
 }
 void XoaThongTinDocGia1(int x,int y,int i){
 	XoaThongTin(chieudaiDG,5,x,y+i);
@@ -489,6 +775,7 @@ void xuat_DG(PTRCNP* z,int dx,int dy,int n,int st){
 			}
 		}
 	}
+//	if(st=chieurongDG==0) st--;
 	SoTrangDocGia=st/chieurongDG +1;
 	VeTrangDocGia();
 }	
@@ -507,7 +794,8 @@ void TinhSoTrangDocGia(PTRCNP t,int sl_dg){
 }
 
 void KiemTraDocGia(PTRCNP t,int j, int MauChu){
-	SetColor(MauChu);int DiemX=90,DiemY=18;
+	SetColor(MauChu);
+	int DiemX=90,DiemY=18;
 	switch(j)
 	{
 		case 4:
@@ -532,7 +820,7 @@ void KiemTraDocGia(PTRCNP t,int j, int MauChu){
 			break;
 	}
 }
-
+// kiemtra xem doc gia co dang muon sach
 int kiemtra_DG(DocGia x){
 	if(x.dsmuon!=NULL) return 1;
 	else return 0;
@@ -542,23 +830,18 @@ int tim_sua_DG(PTRCNP t,int ss){
 	DocGia Dg;
 	int c,d;
 	string s;
-    if(t==NULL){
-        VeNoiDungThongBao("Danh sach rong",24,11,14);
- 		XoaNoiDungThongBao(24,11,80);
-        XoaKhungCapNhat(90,18,13);
- //       return 0 ;
-    }
-    else{
         do{
             if(t->dg.MaThe==ss){
+            			XoaKhungChinhSua(90,18);
             			SetColor(NOI_DUNG);
             			XoaNoiDungThongBao(24,11,60);
-            			VeNoiDungThongBao("Tim Thay Ma The",24,11,14);
+            			VeNoiDungThongBao("TIM THAY MA THE",24,11,14);
             			Sleep(1000);
-						VeKhungCapNhat(ThongTinDG,90,18,27,13,14,4,2);//84 x=90,18,13
+            			VeKhungCapNhat(ThongTinDG,90,18,27,13,2,2,8);//84 x=90,18,13
             			XoaNoiDungThongBao(24,11,60);
 						gotoxy(DiemX+6+cd_td[0],DiemY+4);
 						cout<<t->dg.MaThe;
+						SetColor(4);
 						gotoxy(DiemX+5+cd_td[1],DiemY+6);
 						cout<<t->dg.ho;
 						gotoxy(DiemX+5+cd_td[2],DiemY+8);
@@ -581,30 +864,30 @@ int tim_sua_DG(PTRCNP t,int ss){
 								{
 									if(j==6)
 									{
-										KiemTraDocGia(t,j,14);
+										KiemTraDocGia(t,j,4);
 										j=12;
-										KiemTraDocGia(t,j,TIEU_DE);
+										KiemTraDocGia(t,j,8);
 									}
 									else if(j>6 && j<=12)
 									{
-										KiemTraDocGia(t,j,14);
+										KiemTraDocGia(t,j,4);
 										j-=2;
-										KiemTraDocGia(t,j,TIEU_DE);
+										KiemTraDocGia(t,j,8);
 									}
 								}
 								else if(a==Down)
 								{
 									if(j==12)
 									{
-										KiemTraDocGia(t,j,14);
+										KiemTraDocGia(t,j,4);
 										j=6;
-										KiemTraDocGia(t,j,TIEU_DE);
+										KiemTraDocGia(t,j,8);
 									}
 									else if(j>=6 && j<12)
 									{
-										KiemTraDocGia(t,j,14);
+										KiemTraDocGia(t,j,4);
 										j+=2;
-										KiemTraDocGia(t,j,TIEU_DE);
+										KiemTraDocGia(t,j,8);
 									}
 								}
 							}
@@ -620,45 +903,62 @@ int tim_sua_DG(PTRCNP t,int ss){
 										
 										break;
 									case 6:
+										s=t->dg.ho;
 										t->dg.ho.pop_back();
-										Dg.ho=CapNhatKiTuKhongSo(t->dg.ho,chieudaiDG[1],24,11,TIEU_DE,80);
+										Dg.ho=CapNhatKiTuKhongSo(t->dg.ho,chieudaiDG[1],24,11,8,80);
 										if(DieuKienKiTu!=1 && t->dg.ho!=Dg.ho)
 										{
 											t->dg.ho=ChuanHoaChuoi(Dg.ho);
 										} 
+										else t->dg.ho=s;
 										gotoxy(DiemX+5+cd_td[1],DiemY+j);
 										cout<<"                   ";
 										gotoxy(DiemX+5+cd_td[1],DiemY+j);
 										cout<<t->dg.ho;
 										break;
 									case 8:
+										s=t->dg.ten;
 										t->dg.ten.pop_back();
-										Dg.ten=CapNhatKiTuKhongSo1(t->dg.ten,chieudaiDG[2],24,11,TIEU_DE,80);if(DieuKienKiTu!=1 && t->dg.ten!=Dg.ten)
+										Dg.ten=CapNhatKiTuKhongSo1(t->dg.ten,chieudaiDG[2],24,11,8,80);
+										if(DieuKienKiTu!=1 )//&& t->dg.ten!=Dg.ten
 										{
 											t->dg.ten=ChuanHoaChuoi(Dg.ten);
 										} 
+										else t->dg.ten=s;
 										gotoxy(DiemX+5+cd_td[2],DiemY+j);
 										cout<<"                  ";
 										gotoxy(DiemX+5+cd_td[2],DiemY+j);
 										cout<<t->dg.ten;
 										break;
 									case 10:
+										s=t->dg.phai;
 										t->dg.phai.pop_back();
+										Dg.phai=t->dg.phai;
 										while(1)
 										{
-											Dg.phai=CapNhatKiTuKhongSo(t->dg.phai,chieudaiDG[3],24,11,TIEU_DE,80);	
-											ChuanHoaChuoi(Dg.phai);
+											Dg.phai=CapNhatKiTuKhongSo1(Dg.phai,3,24,11,8,60);	
+											if(DieuKienKiTu==1)
+											{
+												Dg.phai=s;
+												break;
+											}
 											if(Dg.phai=="Nu") break;
-											if(Dg.phai=="Nam") break;
-											gotoxy(DiemX+5+cd_td[3],DiemY+j); cout<<"       ";
-											gotoxy(DiemX+5+cd_td[3],DiemY+j);
+											else if(Dg.phai=="Nam") break;
+											else
+											{												
+												VeNoiDungThongBao("GIOI TINH KHONG HOP LE",24,11,2);
+												Sleep(1000);
+												XoaNoiDungThongBao(24,11,60);
+											
+											}
 										}
 										if(DieuKienKiTu!=1 && t->dg.phai!=Dg.phai)
 										{
 											t->dg.phai=Dg.phai;
 										} 
+										else t->dg.phai=s;
 										gotoxy(DiemX+5+cd_td[3],DiemY+j);
-										cout<<"     ";
+										cout<<"   ";
 										gotoxy(DiemX+5+cd_td[3],DiemY+j);
 										cout<<t->dg.phai;
 										break;
@@ -668,7 +968,7 @@ int tim_sua_DG(PTRCNP t,int ss){
 										while(1)
 										{
 											ShowCur(1);
-											d=NhapSo1(1,DiemX+3+cd_td[4],DiemY+j,TIEU_DE,80);
+											d=NhapSo1(1,DiemX+3+cd_td[4],DiemY+j,8,80);
 											if(d!=0 && d!=1)
 												{
 													gotoxy(DiemX+5+cd_td[4],DiemY+j);
@@ -690,7 +990,7 @@ int tim_sua_DG(PTRCNP t,int ss){
 							}
 							else if(a==Esc)
 							{
-								VeNoiDungThongBao("Cap nhat thanh cong",24,11,4);
+								VeNoiDungThongBao("CAP NHAT DOC GIA THANH CONG",24,11,14);
 								Sleep(3000);
 								XoaNoiDungThongBao(24,11,60);
         						XoaKhungCapNhat(90,18,13);
@@ -705,12 +1005,10 @@ int tim_sua_DG(PTRCNP t,int ss){
 		
         }while(t!=NULL);
         XoaNoiDungThongBao(24,11,60);
-    	VeNoiDungThongBao("Khong Tim Thay Ma The",24,11,14);
+    	VeNoiDungThongBao("MA THE KHONG TON TAI",24,11,2);
         Sleep(1000);
         XoaNoiDungThongBao(24,11,60);
-        XoaKhungCapNhat(90,18,13);
         return 0;
-    }
 }
 
 DocGia  remove_case_3 ( PTRCNP &r,PTRCNP &rp )
@@ -729,7 +1027,7 @@ int  tim_xoaDG( PTRCNP &t,int ss)
 {
 	int ktra=0;
 	if (t == NULL) return ktra;
-	else if(t->dg.dsmuon != NULL)
+	else if(t->dg.dsmuon != NULL && t->dg.MaThe==ss)
 	{
 		ktra=2;
 		return ktra;
@@ -739,6 +1037,7 @@ int  tim_xoaDG( PTRCNP &t,int ss)
 		if (ss < t->dg.MaThe)   tim_xoaDG(t->left,ss);
 	  	else if (ss > t->dg.MaThe) tim_xoaDG (t->right,ss);
 	    else{
+	    	XoaKhungChinhSua(90,18);
 		    PTRCNP rp;
 			rp = t;
 	        if (rp->right == NULL)  t = rp->left;   
@@ -755,7 +1054,8 @@ int  tim_xoaDG( PTRCNP &t,int ss)
 //////////////////////////////// DO HOA
 void XoaPhimDocGia(){
 	XoaPhim(XDocGia-1, YDocGia+3+chieurongDG+1);
-}void VePhimChucNang_DG(string x){
+}
+void VePhimChucNang_DG(string x){
 	XoaPhimDocGia();
 	VePhim(Them, CHU, NEN_PHIM, XDocGia, YDocGia+3+chieurongDG+1);
 	VePhim(CapNhat, CHU, NEN_PHIM, wherex()+3, wherey()-2);
@@ -775,7 +1075,6 @@ DocGia NhapDocGia(int x,int y,int* ma,int dem_ma){
 	cout<<c.MaThe;
 	dx=	x+chieudaiDG[0]+1;				//int chieudaiDG[5]={8,20,11,11,16};
 	gotoxy(dx,y);
-	
 	s=NhapKiTuKhongSo(18,24,11,2,50);
 	if(DieuKienKiTu==1){
 		XoaThongTinDocGia();
@@ -785,7 +1084,7 @@ DocGia NhapDocGia(int x,int y,int* ma,int dem_ma){
 	dx=dx+chieudaiDG[1]+1;
 	gotoxy(dx,y);
 	
-	s=NhapKiTuKhongSo(10,24,11,2,50);
+	s=NhapKiTuKhongSo1(10,24,11,2,50);
 	if(DieuKienKiTu==1){
 		XoaThongTinDocGia();
 		return c; 
@@ -794,7 +1093,7 @@ DocGia NhapDocGia(int x,int y,int* ma,int dem_ma){
 	dx=dx+chieudaiDG[2]+1;
 	gotoxy(dx,y);
 	while(1){
-		s=NhapKiTuKhongSo(3,24,11,2,50);
+		s=NhapKiTuKhongSo1(3,24,11,2,50);
 		s=ChuanHoaChuoi(s);
 		if(DieuKienKiTu==1){
 			XoaThongTinDocGia();
@@ -802,23 +1101,28 @@ DocGia NhapDocGia(int x,int y,int* ma,int dem_ma){
 		}	
 		if(s=="Nu") break;
 		if(s=="Nam") break;
+		VeNoiDungThongBao("GIOI TINH KHONG HOP LE",24,11,2);
+		Sleep(1000);
+		XoaNoiDungThongBao(24,11,60);
 		for(int i=dx;i<dx+3;i++){
 			gotoxy(i,y); cout<<"  ";
 		}
 		gotoxy(dx,y);
-	//	XoaThongTinDanhMucSach();
 	}
 	c.phai=s;
 	if(DieuKienKiTu==1){
 		XoaThongTinDocGia();
 		return c; 
 	}
-	dx=dx+chieudaiDG[3]+1;
-	gotoxy(dx,y);	
-	c.TrangThaiThe=1;
-	cout<<"Hoat Dong";
-	c.dsmuon=NULL;
-	return c;	
+	else if(DieuKienKiTu==0)
+	{
+		dx=dx+chieudaiDG[3]+1;
+		gotoxy(dx,y);	
+		c.TrangThaiThe=1;
+		cout<<"Hoat Dong";
+		c.dsmuon=NULL;
+		return c;
+	}	
 }
 
 //////////////////////////////////
@@ -827,10 +1131,10 @@ void Docgia(PTRCNP t){
 	Khoitao(t);
 	char j;
 	string s;
-	int sl_dg,x=13,y=16,dy,i=0,ss,dem=0,sort=0,dem_ma=0,kt;//vi tri dau tien cua bang
+	int sl_dg=0,x=13,y=16,dy,i=0,ss,dem=0,sort=0,dem_ma=0,kt;//vi tri dau tien cua bang
 	int* ma;
 	luu_MT_vao_mang(ma,dem_ma);
-	VeKhungThongBao(12,10,14,72);// toa do noi dung thong bao x=24;y=11
+	VeKhungThongBao(12,10,8,72);// toa do noi dung thong bao x=24;y=11
 	BangDanhSach(ThongTinDG,chieudaiDG,chieurongDG,5,2,4,12,13);//x=13,y=17
 	load_DocGia(t);
 	load_MuonTra(t);
@@ -841,7 +1145,7 @@ void Docgia(PTRCNP t){
 		xuat_DG1(v[0]->dg,x,y,0,2);
 	}
 	VePhimChucNang_DG("F3 SORT TEN"); 
-	DocGia c;
+	DocGia c,d;
 	while(1){
 		ShowCur(0);
 		j=getch();
@@ -850,98 +1154,150 @@ void Docgia(PTRCNP t){
 			j=getch();
 			if(j==F1)
 			{
-				if(sl_dg>chieurongDG){
+				if(sl_dg+1-dem/chieurongDG*chieurongDG<chieurongDG)
+				{
+					xuat_DG1(v[dem]->dg,x,y,dem%chieurongDG,4);
+				}
+				else if(sl_dg>chieurongDG)
+				{
 					XoaHetDG();
 					xuat_DG(v,x,y,sl_dg,(sl_dg)/chieurongDG*chieurongDG);	
 				}
 				while(1)
 				{
-					if(sl_dg<chieurongDG) dy=y+sl_dg%chieurongDG;
-					else if(sl_dg>=chieurongDG)
+					if(sl_dg>=chieurongDG)
 					{
-						if(sl_dg%chieurongDG==0)
+						if(sl_dg+1-dem/chieurongDG*chieurongDG<chieurongDG)
+						{
+							xuat_DG1(v[dem]->dg,x,y,dem%chieurongDG,4);
+						}
+						else if(sl_dg%chieurongDG==0 )
 						{
 							XoaHetDG();
 							xuat_DG(v,x,y,sl_dg,(sl_dg)/chieurongDG*chieurongDG);	
 							TongTrangDocGia=(sl_dg+1)/chieurongDG+1;
 							VeTrangDocGia();
 						}	
-						dy=y+sl_dg%chieurongDG;
 					}
+					dy=y+sl_dg%chieurongDG;
 					c=NhapDocGia(x,dy,ma,dem_ma);
 					if(DieuKienKiTu==0)
 					{
 						sl_dg++;
+						xuat_DG1(c,x,dy,0,4);
 						xoa_MT_trong_mang(ma,dem_ma);
-						nhap_DG(t,c);//sl_dg	
+						nhap_DG(t,c);//sl_dg
+						VeNoiDungThongBao("THEM THANH CONG DOC GIA ",24,11,14);
+						Sleep(1000);
+						XoaNoiDungThongBao(24,11,60);
 						ghi_MT_vao_file(ma,dem_ma);
 					}
 					else
 					{	
+						ShowCur(0);
+						VeNoiDungThongBao("THOAT KHOI THEM DOC GIA",24,11,2);
+						Sleep(1000);
+						XoaNoiDungThongBao(24,11,60);
 						XoaHetDG();
 						v=luu_dia_chi_vao_mang(t,sl_dg,sort);
-						xuat_DG(v,x,y,sl_dg,dem);
 						dem=0;
-						xuat_DG(v,x,y,sl_dg,dem);
-						xuat_DG1(v[dem]->dg,x,y,dem,2);
+						if(sl_dg==0)
+						{
+							VeNoiDungThongBao("CHUA CO DU LIEU DOC GIA",24,11,2);
+							Sleep(1000);
+							XoaNoiDungThongBao(24,11,60);
+						}
+						else
+						{
+							xuat_DG(v,x,y,sl_dg,dem);
+							xuat_DG1(v[dem]->dg,x,y,dem,2);
+							d.MaThe=0;
+						}
 						break;
 					} 	
 				}
-				XoaHetDG();
-				dem=0;
-				xuat_DG(v,x,y,sl_dg,dem);
 				save_DocGia(t);
 				save_MuonTra(t);			
 			}
 			else if(j==F2)
 			{
+				ss=0;
+				while(ss!=1)
+				{
+			
 				if(sl_dg==0)
-				{VeNoiDungThongBao("CHUA CO DU LIEU DOC GIA DE CAP NHAT",24,11,2);
+				{
+					VeNoiDungThongBao("CHUA CO DU LIEU DOC GIA DE CAP NHAT",24,11,2);
 					Sleep(1000);
 					XoaNoiDungThongBao(24,11,60);
 				}
 				else
 				{
-					VeKhungChinhSua("CHINH SUA DOC GIA", "Ma The: ",90,18,14,2,20);
-					ss=NhapSo(6,24,11,4,50);
-					XoaKhungChinhSua(90,18);
+					VeKhungChinhSua("CHINH SUA DOC GIA", "MA THE: ",90,18,2,8,20);
+					if(ss==0) ss=NhapSo2(6,24,11,4,50);
 					i=0,kt=0;
-					while(i<sl_dg)
+					if(ss>=100000)
 					{
-						if(v[i]->dg.MaThe==ss)
+						
+						while(i<sl_dg)
 						{
-							kt=1;
-							break;
-						} 
-						i++;
-					}
-					if(kt)
-					{
-						if(((dem/chieurongDG*chieurongDG)<=i) && (i<(dem/chieurongDG*chieurongDG+chieurongDG)))
-						{
-							xuat_DG1(v[dem]->dg,x,y,dem%chieurongDG,4);
-							xuat_DG1(v[i]->dg,x,y,i%chieurongDG,2);
+							if(v[i]->dg.MaThe==ss)
+							{
+								kt=1;
+								break;
+							} 
+							i++;
 						}
-						else
+						if(kt)
 						{
-							XoaHetDG();
-							xuat_DG(v,x,y,sl_dg,i/chieurongDG*chieurongDG);
-							xuat_DG1(v[i]->dg,x,y,i%chieurongDG,2);
+							
+							if(((dem/chieurongDG*chieurongDG)<=i) && (i<(dem/chieurongDG*chieurongDG+chieurongDG)))
+							{
+								xuat_DG1(v[dem]->dg,x,y,dem%chieurongDG,4);
+								xuat_DG1(v[i]->dg,x,y,i%chieurongDG,2);
+							}
+							else
+							{
+								XoaHetDG();
+								xuat_DG(v,x,y,sl_dg,i/chieurongDG*chieurongDG);
+								xuat_DG1(v[i]->dg,x,y,i%chieurongDG,2);
+							}
+							dem=i;
 						}
-						dem=i;
-					}
-					i=tim_sua_DG(t,ss);
-					if(i)
-					{
-						XoaThongTinDocGia1(x,y,dem%chieurongDG);
-						xuat_DG1(v[dem]->dg,x,y,dem%chieurongDG,2);
-					}
-					else
-					{
-					}
-					save_DocGia(t);
-					save_MuonTra(t);
-				}	
+						i=tim_sua_DG(t,ss);
+						if(i)
+						{
+						
+							XoaThongTinDocGia1(x,y,dem%chieurongDG);
+							xuat_DG1(v[dem]->dg,x,y,dem%chieurongDG,2);
+							ss=0;
+							save_DocGia(t);
+							save_MuonTra(t);
+						}
+						else if(i==0)
+						{
+							gotoxy(106,22);
+							ss=CapNhatSo1(ss,6,100,22,4,60);
+							if(DieuKienKiTu==1)
+							{
+								ss=1;
+							}
+						}
+				}
+				else if(ss!=1 && ss<100000)
+				{
+					ss=1;
+				}
+				if(ss==1)
+				{
+					ShowCur(0);
+					XoaKhungChinhSua(90,18);
+					VeNoiDungThongBao("THOAT KHOI CAP NHAT",24,11,2);
+					Sleep(1000);
+					XoaNoiDungThongBao(24,11,60);
+				}
+			}
+				}
 			}
 			else if(j==F3)
 			{
@@ -957,8 +1313,7 @@ void Docgia(PTRCNP t){
 					v=luu_dia_chi_vao_mang(t,sl_dg,sort);
 					dem=0;
 					xuat_DG(v,x,y,sl_dg,dem);
-					dem=0;
-					xuat_DG(v,x,y,sl_dg,dem);
+					xuat_DG1(v[dem]->dg,x,y,dem,2);
 					if(sort%2==0)
 					{
 						VePhimChucNang_DG("F3 SORT TEN");
@@ -973,6 +1328,8 @@ void Docgia(PTRCNP t){
 			j=getch();
 			if(j==Delete)
 			{
+				ss=0;
+				while(ss!=1)
 				if(sl_dg==0)
 				{
 					VeNoiDungThongBao("CHUA CO DU LIEU DOC GIA DE XOA",24,11,2);
@@ -981,9 +1338,11 @@ void Docgia(PTRCNP t){
 				}
 				else
 				{
-					VeKhungChinhSua("XOA DOC GIA", "Ma The: ",90,18,14,2,20);
-					ss=NhapSo(6,24,11,4,50);
-					XoaKhungChinhSua(90,18);
+					VeKhungChinhSua("XOA DOC GIA", "MA THE: ",90,18,2,2,20);
+					if (ss==0) ss=NhapSo2(6,24,11,4,50);
+					if(ss>100000)
+					{
+					
 					kt=0;
 					i=0;
 					while(i<sl_dg-1)
@@ -1016,74 +1375,102 @@ void Docgia(PTRCNP t){
 						VeNoiDungThongBao("MA THE KHONG TON TAI",24,11,2);
 						Sleep(1000);
 						XoaNoiDungThongBao(24,11,50);
+						gotoxy(106,22);
+						ss=CapNhatSo1(ss,6,100,22,4,60);
+						if(DieuKienKiTu==1)
+						{
+							ss=1;
+						}
 					}
 					else if(kt==2)
 					{
 						VeNoiDungThongBao("KHONG THE XOA DOC GIA DA MUON SACH",24,11,2);
-						Sleep(2000);
+						Sleep(1000);
 						XoaNoiDungThongBao(24,11,60);
+						gotoxy(106,22);
+						ss=CapNhatSo1(ss,6,100,22,4,60);
+						if(DieuKienKiTu==1)
+						{
+							ss=1;
+						}
 					}
 					else if(kt==1) 
 					{
-						VeNoiDungThongBao("XOA MA THE THANH CONG",24,11,2);
+						VeNoiDungThongBao("XOA MA THE THANH CONG",24,11,14);
 						them_MT_trong_mang(ma,dem_ma,ss);
 						ghi_MT_vao_file(ma,dem_ma);	
 						Sleep(1000);
 						XoaNoiDungThongBao(24,11,50);
 						XoaHetDG();
-						sl_dg--;v=luu_dia_chi_vao_mang(t,sl_dg,sort);
-						if(dem>sl_dg) dem=sl_dg;
-						xuat_DG(v,x,y,sl_dg,(dem)/chieurongDG*chieurongDG);
-						xuat_DG1(v[dem]->dg,x,y,dem,2);
+						sl_dg--;
+						v=luu_dia_chi_vao_mang(t,sl_dg,sort);
+						if(dem>sl_dg) dem=sl_dg-1;
+						xuat_DG(v,x,y,sl_dg,dem/chieurongDG*chieurongDG);
+						xuat_DG1(v[dem]->dg,x,y,dem%chieurongDG,2);
+						save_DocGia(t);	
+						save_MuonTra(t);
+						ss=0;
 					}
-					save_DocGia(t);	
-					save_MuonTra(t);
+					}
+					if(ss==1)
+					{
+						ShowCur(0);
+						XoaKhungChinhSua(90,18);
+						VeNoiDungThongBao("THOAT KHOI XOA DOC GIA",24,11,2);
+						ss=1;
+						Sleep(1000);
+						XoaNoiDungThongBao(24,11,60);
+					}
+					
 				}	
 			}
 			else if(j==Up)
 			{
-			dem--;
-			if(sl_dg<=chieurongDG)
-			{
-				if(dem<0)
+				if(dem==0)
 				{
-					dem=sl_dg;
-					xuat_DG1(v[0]->dg,x,y,0,4);
-					xuat_DG1(v[dem-1]->dg,x,y,dem-1,2);
-				}
-				else if(dem==sl_dg-1){
-					dem--;
 					xuat_DG1(v[dem]->dg,x,y,dem,2);
-					xuat_DG1(v[dem+1]->dg,x,y,dem+1,4);
+				}
+				dem--;
+				if(sl_dg<=chieurongDG)
+				{
+					if(dem==0)
+					{
+						dem=sl_dg;
+						xuat_DG(v,x,y,sl_dg,dem%chieurongDG*chieurongDG);
+						xuat_DG1(v[dem-1]->dg,x,y,dem,2);
+					}
+					else if(dem==sl_dg-1){
+						dem--;
+						xuat_DG1(v[dem]->dg,x,y,dem,2);
+						xuat_DG1(v[dem+1]->dg,x,y,dem+1,4);
+					}
+					else
+					{
+						xuat_DG1(v[dem]->dg,x,y,dem,2);
+						xuat_DG1(v[dem+1]->dg,x,y,dem+1,4);
+					}
 				}
 				else
 				{
-					xuat_DG1(v[dem]->dg,x,y,dem,2);
-					xuat_DG1(v[dem+1]->dg,x,y,dem+1,4);
+					if(dem<0)
+					{
+						dem=sl_dg-1;
+						XoaHetDG();
+						xuat_DG(v,x,y,sl_dg,dem/chieurongDG*chieurongDG);
+						xuat_DG1(v[dem]->dg,x,y,(dem)%chieurongDG,2);	
+					}
+					else if(dem%chieurongDG==19 && dem>0)
+					{
+						XoaHetDG();
+						xuat_DG(v,x,y,sl_dg,dem/chieurongDG*chieurongDG);
+						xuat_DG1(v[dem]->dg,x,y,(dem)%chieurongDG,2);
+					}
+					else
+					{
+						xuat_DG1(v[dem]->dg,x,y,dem%chieurongDG,2);
+						xuat_DG1(v[dem+1]->dg,x,y,(dem+1)%chieurongDG,4);	
+					}
 				}
-			}
-			else
-			{
-				TongTrangDocGia=sl_dg/chieurongDG;
-				if(dem<0)
-				{	
-					xuat_DG(v,x,y,sl_dg,TongTrangDocGia*chieurongDG);
-					dem=sl_dg-1;
-					xuat_DG1(v[dem]->dg,x,y,dem%chieurongDG,2);
-				}
-				else if(dem%chieurongDG==19)
-				{		
-				int k=dem-chieurongDG+1;
-					XoaHetDG();
-					xuat_DG(v,x,y,sl_dg,k);
-					xuat_DG1(v[dem]->dg,x,y,dem%chieurongDG,2);
-				}
-				else if(dem%chieurongDG!=19)
-				{
-					xuat_DG1(v[dem]->dg,x,y,dem%chieurongDG,2);
-					xuat_DG1(v[dem+1]->dg,x,y,(dem+1)%chieurongDG,4);	
-				}
-			}
 			}
 			else if(j==Down)
 			{
@@ -1113,16 +1500,16 @@ void Docgia(PTRCNP t){
 				}
 				else
 				{
-					if(dem%chieurongDG==0)
-					{
-						xuat_DG(v,x,y,sl_dg,dem);
-						xuat_DG1(v[dem]->dg,x,y,(dem)%chieurongDG,2);
-					}
-					else if(dem>sl_dg-1)
+					if(dem>sl_dg-1) 
 					{
 						dem=0;
 						xuat_DG(v,x,y,sl_dg,dem);
-						xuat_DG1(v[0]->dg,x,y,0,2);
+						xuat_DG1(v[dem]->dg,x,y,(dem)%chieurongDG,2);
+					}
+					else if(dem%chieurongDG==0 && dem<=sl_dg-1)
+					{
+						xuat_DG(v,x,y,sl_dg,dem);
+						xuat_DG1(v[dem]->dg,x,y,dem%chieurongDG,2);
 					}
 					else 
 					{
